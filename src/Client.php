@@ -122,7 +122,7 @@ class Client
                             if (property_exists($body, 'errorMessageKey') && $body->errorMessageKey === 'errors.authentication.invalidRestToken') {
                                 if ($this->shouldAutoRefreshSessions) {
                                     $requestPath = str_replace($this->authClient->getRestUrl(), '', $request->getUri());
-                                    $this->refreshOrInitiateSession();
+                                    $this->initiateSession();
                                     $refreshedRequest = $request
                                         ->withHeader('BhRestToken', $this->authClient->getRestToken())
                                         ->withUri(new Uri($this->authClient->getRestUrl() . $requestPath))

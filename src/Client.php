@@ -97,10 +97,10 @@ class Client
         // adds session initialization if requests made when no session is active
         $this->httpHandlerStack->push(function (callable $handler) {
             return function (RequestInterface $request, array $options) use ($handler) {
-                if ($this->sessionIsValid()) {
-                    return $handler($request, $options);
-                }
-                else {
+//                if ($this->sessionIsValid()) {
+//                    return $handler($request, $options);
+//                }
+//                else {
                     $this->refreshOrInitiateSession();
                     $requestPath = str_replace($this->authClient->getRestUrl(), '', $request->getUri());
                     $refreshedRequest = $request
@@ -108,7 +108,7 @@ class Client
                         ->withUri(new Uri($this->authClient->getRestUrl() . $requestPath))
                     ;
                     return $handler($refreshedRequest, $options);
-                }
+//                }
             };
         });
 
@@ -122,7 +122,7 @@ class Client
                             if (property_exists($body, 'errorMessageKey') && $body->errorMessageKey === 'errors.authentication.invalidRestToken') {
                                 if ($this->shouldAutoRefreshSessions) {
                                     $requestPath = str_replace($this->authClient->getRestUrl(), '', $request->getUri());
-                                    $this->initiateSession();
+                                    $this->refreshOrInitiateSession();
                                     $refreshedRequest = $request
                                         ->withHeader('BhRestToken', $this->authClient->getRestToken())
                                         ->withUri(new Uri($this->authClient->getRestUrl() . $requestPath))
